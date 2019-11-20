@@ -74,7 +74,7 @@ public extension UIImageView {
         }
     }
     
-    public var style:LoadingStyle {
+    var style:LoadingStyle {
         get {
             if let current = objc_getAssociatedObject(self,&StyleKey) as? LoadingStyle {
                 return current
@@ -88,7 +88,7 @@ public extension UIImageView {
         }
     }
     
-    public var status:UploadStatus {
+    var status:UploadStatus {
         get {
             if let current = objc_getAssociatedObject(self,&UploadKey) as? UploadStatus {
                 return current
@@ -101,7 +101,7 @@ public extension UIImageView {
         }
     }
     
-    public var completedBlock:(() -> Void)? {
+    var completedBlock:(() -> Void)? {
         get {
             if let c = objc_getAssociatedObject(self, &CompletedBlock) as? (() -> Void) {
                 return c
@@ -109,13 +109,13 @@ public extension UIImageView {
             return nil
         }
         set {
-            let new:Any = newValue
+            let new:Any = newValue!
 
             objc_setAssociatedObject(self,&CompletedBlock,new,.OBJC_ASSOCIATION_RETAIN)
         }
     }
     
-    public var failBlock:(()-> Void)? {
+    var failBlock:(()-> Void)? {
         get {
             if let c = objc_getAssociatedObject(self, &FailBlock) as? (() -> Void) {
                 return c
@@ -124,7 +124,7 @@ public extension UIImageView {
         }
         set {
             
-            let new:Any = newValue
+            let new:Any = newValue!
             objc_setAssociatedObject(self,&FailBlock,new as Any,.OBJC_ASSOCIATION_RETAIN)
         }
     }
@@ -231,11 +231,11 @@ public extension UIImageView {
 
 public extension UIImageView  {
     
-    func animationDoing(timer:Timer) {
+    @objc func animationDoing(timer:Timer) {
         self.currentProgress = animationProgress()
     }
     
-    public func uploadImage(image:UIImage,progress:Float) {
+    func uploadImage(image:UIImage,progress:Float) {
         self.uploadImage(image:image, progress: progress, duration: DefaultDuration)
     }
     
@@ -260,11 +260,11 @@ public extension UIImageView  {
         }
     }
     
-    public func uploadImageFail() {
+    func uploadImageFail() {
         self.uploadImageFail(duration:DefaultDuration)
     }
     
-    public func uploadImageFail(duration:CFTimeInterval) {
+    func uploadImageFail(duration:CFTimeInterval) {
         
         if self.status == .completed || self.status == .failed {
             return
@@ -290,11 +290,11 @@ public extension UIImageView  {
         CATransaction.commit()
     }
     
-    public func uploadCompleted() {
+    func uploadCompleted() {
         self.uploadCompleted(duration:DefaultDuration)
     }
     
-    public func uploadCompleted(duration:CFTimeInterval) {
+    func uploadCompleted(duration:CFTimeInterval) {
         if self.status == .completed {
             return
         }
@@ -370,7 +370,7 @@ extension UIImageView:CAAnimationDelegate {
         if progressTimer == nil {
             progressTimer = Timer.init(timeInterval: 0.01, target: self, selector: #selector(UIImageView.animationDoing(timer:)), userInfo: nil, repeats: true)
             if let pTimer = progressTimer {
-                RunLoop.main.add(pTimer, forMode: RunLoopMode.commonModes)
+                RunLoop.main.add(pTimer, forMode: RunLoop.Mode.common)
             }
         }
         
@@ -391,7 +391,7 @@ extension UIImageView {
         animation.setValue("StrokeProgress", forKey: "animationID")
         animation.fromValue = self.animationFromValue()
         animation.toValue = self.animationToValue(progress: progress)
-        animation.fillMode = kCAFillModeBoth
+        animation.fillMode = CAMediaTimingFillMode.both
         
         switch self.style {
         case .sector:
@@ -423,7 +423,7 @@ extension UIImageView {
                 self.sectorLayer.mask = self.generateMask(progress: nil)
                 waveTimer = Timer.init(timeInterval: 0.05, target: self, selector: #selector(UIImageView.reDrawWave(timer:)), userInfo: nil, repeats: true)
                 if let wTimer = waveTimer {
-                    RunLoop.main.add(wTimer, forMode: RunLoopMode.commonModes)
+                    RunLoop.main.add(wTimer, forMode: RunLoop.Mode.common)
                 }
             }
             
@@ -432,7 +432,7 @@ extension UIImageView {
         self.lastProgress = progress
     }
     
-    func reDrawWave(timer:Timer) {
+    @objc func reDrawWave(timer:Timer) {
         if let m = self.sectorLayer.mask as? CAShapeLayer{
             m.path = waveObject.generateWavePath(CGFloat(10))
         }
