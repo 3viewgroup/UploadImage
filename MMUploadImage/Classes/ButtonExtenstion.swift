@@ -24,28 +24,28 @@ public extension UIButton {
         }
     }
     
-    public func uploadImage(image: UIImage, progress: Float) {
+    func uploadImage(image: UIImage, progress: Float) {
         self.setImageSize()
         self.imageView?.uploadImage(image:image, progress: progress)
     }
     
-    public func uploadImageFail() {
+    func uploadImageFail() {
         self.imageView?.uploadImageFail()
     }
     
-    public func uploadImageFail(duration: CFTimeInterval) {
+    func uploadImageFail(duration: CFTimeInterval) {
         self.imageView?.uploadImageFail(duration: duration)
     }
     
-    public func uploadCompleted() {
+    func uploadCompleted() {
         self.imageView?.uploadCompleted()
     }
     
-    public func uploadCompleted(duration: CFTimeInterval) {
+    func uploadCompleted(duration: CFTimeInterval) {
         self.imageView?.uploadCompleted(duration: duration)
     }
     
-    public func completedBlock(completed:(()-> Void)?) {
+    func completedBlock(completed:(()-> Void)?) {
         
         self.imageView?.completedBlock = {
             if let c = completed {
@@ -55,15 +55,15 @@ public extension UIButton {
         }
     }
     
-    public func failedBlock(completed:(()-> Void)?) {
+    func failedBlock(completed:(()-> Void)?) {
         self.imageView?.failBlock = completed
     }
     
-    public func setStyle(style:LoadingStyle) {
+    func setStyle(style:LoadingStyle) {
         self.imageView?.style = style
     }
     
-    public func setAutoCompleted(isAuto:Bool) {
+    func setAutoCompleted(isAuto:Bool) {
         self.imageView?.autoCompleted = isAuto
     }
     
